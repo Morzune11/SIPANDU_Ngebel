@@ -1,0 +1,39 @@
+# Mengabaikan folder vendor (paket PHP) dan node_modules (paket NPM)
+/vendor
+/node_modules
+
+# Mengabaikan file environment yang berisi password dan kredensial rahasia
+.env
+.env.backup
+.env.production
+.env.local
+
+# Mengabaikan file hasil kompilasi aset (Tailwind/Vite)
+/public/build
+/public/hot
+/public/storage
+
+# Mengabaikan kunci aplikasi dan log
+/storage/*.key
+/storage/logs/*.log
+/storage/app/public/dokumen_syarat/*
+!/storage/app/public/dokumen_syarat/.gitignore
+
+# Mengabaikan database SQLite lokal (karena Anda sudah pakai MySQL)
+database/database.sqlite
+*.sqlite
+*.db
+
+# Mengabaikan cache testing
+.phpunit.result.cache
+.php-cs-fixer.cache
+
+# Mengabaikan file sistem operasi dan editor kode (VS Code / PHPStorm)
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
