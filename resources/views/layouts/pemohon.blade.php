@@ -61,7 +61,7 @@
                                         <p class="text-xs text-slate-400 mt-2">{{ $notif->created_at->diffForHumans() }}</p>
                                     </a>
                                 @empty
-                                    <div class="p-4 text-center text-sm text-slate-500">Belum ada notifikasi baru.</div>
+                                    <div class="p-4 text-center text-sm text-slate-500">Belum ada notifikasi bar</div>
                                 @endforelse
                             </div>
                         </div>
