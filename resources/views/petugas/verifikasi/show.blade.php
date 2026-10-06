@@ -47,40 +47,94 @@
 
     <!-- Kolom Kanan: Aksi Status & Draf -->
     <div class="space-y-6">
-        <!-- PANEL FORM STATUS ADMIN -->
+      <!-- PANEL FORM STATUS ADMIN -->
         @if($application->status !== 'selesai')
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
                 <h3 class="text-lg font-bold text-slate-800 mb-4">Ubah Status Pengajuan</h3>
-                <form action="{{ route('verifikasi.status', $application->id) }}" method="POST">
+                
+                <!-- Tambahkan id="formUbahStatus" pada form -->
+                <form id="formUbahStatus" action="{{ route('verifikasi.status', $application->id) }}" method="POST">
                     @csrf
+                    
                     <div class="mb-4">
-                        <!-- Dropdown Status -->
-                        <select name="status" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-blue-500 text-sm font-medium">
-                            <!-- <option value="diajukan" {{ $application->status === 'diajukan' ? 'selected' : '' }}>Diajukan (Menunggu)</option>
-                            <option value="diproses" {{ $application->status === 'diproses' ? 'selected' : '' }}>Sedang Direview</option> -->
-                            <option value="revisi" {{ $application->status === 'revisi' ? 'selected' : '' }}>Perlu Revisi Berkas</option>
-                            <option value="menunggu_tte" {{ $application->status === 'menunggu_tte' ? 'selected' : '' }}>Syarat Lengkap (Ajukan ke Camat)</option>
+                        <label class="block text-sm font-medium text-slate-700 mb-2">Pilih Keputusan / Status</label>
+                        <!-- Tambahkan id="pilihStatus" dan event onchange -->
+                        <select id="pilihStatus" name="status" onchange="toggleRevisi()" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm font-semibold transition bg-slate-50 cursor-pointer">
+                            <option value="diajukan" {{ $application->status === 'diajukan' ? 'selected' : '' }}>Diajukan (Menunggu)</option>
+                            <option value="diproses" {{ $application->status === 'diproses' ? 'selected' : '' }}>Sedang Direview / Diproses</option>
+                            <option value="revisi" {{ $application->status === 'revisi' ? 'selected' : '' }}>Kembalikan ke Pemohon (Perlu Revisi Berkas)</option>
+                            <option value="menunggu_tte" {{ $application->status === 'menunggu_tte' ? 'selected' : '' }}>Berkas Lengkap & Valid (Ajukan ke Camat)</option>
                         </select>
                     </div>
                     
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Catatan Revisi (Opsional)</label>
-                        <textarea name="catatan_revisi" rows="2" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm">{{ $application->catatan_revisi }}</textarea>
+                    <!-- Area Catatan Revisi: Diberi id="areaRevisi" dan disembunyikan jika bukan revisi -->
+                    <div id="areaRevisi" class="mb-5 {{ $application->status === 'revisi' ? 'block' : 'hidden' }}">
+                        <div class="p-4 bg-orange-50 border border-orange-200 rounded-xl">
+                            <label class="block text-sm font-bold text-orange-800 mb-1">
+                                Pesan Revisi Untuk Pemohon <span class="text-red-500">*</span>
+                            </label>
+                            <p class="text-xs text-orange-600 mb-3">Tuliskan secara jelas dokumen apa yang salah atau kurang agar pemohon dapat memperbaikinya.</p>
+                            
+                            <textarea id="inputCatatan" name="catatan_revisi" rows="3" placeholder="Contoh: Scan KTP kurang jelas, mohon foto ulang..." class="w-full px-3 py-2 border border-orange-300 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500 bg-white">{{ $application->catatan_revisi }}</textarea>
+                        </div>
                     </div>
 
-                    <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition shadow-sm">
-                        Simpan Perubahan Status
+                    <!-- Tombol dengan State Loading -->
+                    <button id="btnSimpanStatus" type="submit" class="w-full flex justify-center items-center py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold transition shadow-sm">
+                        <span id="teksTombol">Simpan Perubahan Status</span>
+                        <!-- Ikon Spinner (disembunyikan secara default) -->
+                        <svg id="iconLoading" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </button>
                 </form>
             </div>
+
+            <!-- Skrip JavaScript Interaktif -->
+            <script>
+                // Fungsi untuk menampilkan/menyembunyikan catatan revisi
+                function toggleRevisi() {
+                    const status = document.getElementById('pilihStatus').value;
+                    const areaRevisi = document.getElementById('areaRevisi');
+                    const inputCatatan = document.getElementById('inputCatatan');
+
+                    if (status === 'revisi') {
+                        // Tampilkan kotak dan wajibkan isi
+                        areaRevisi.classList.remove('hidden');
+                        areaRevisi.classList.add('block');
+                        inputCatatan.setAttribute('required', 'true');
+                    } else {
+                        // Sembunyikan kotak dan hapus kewajiban isi
+                        areaRevisi.classList.remove('block');
+                        areaRevisi.classList.add('hidden');
+                        inputCatatan.removeAttribute('required');
+                        inputCatatan.value = ''; // (Opsional) Kosongkan isian jika diganti ke status lain
+                    }
+                }
+
+                // Fungsi saat form di-submit (Mencegah klik ganda & efek loading)
+                document.getElementById('formUbahStatus').addEventListener('submit', function() {
+                    const btn = document.getElementById('btnSimpanStatus');
+                    const teks = document.getElementById('teksTombol');
+                    const icon = document.getElementById('iconLoading');
+
+                    // Kunci tombol
+                    btn.disabled = true;
+                    btn.classList.add('opacity-75', 'cursor-not-allowed');
+                    
+                    // Ubah teks & tampilkan animasi berputar
+                    teks.innerText = 'Menyimpan Data...';
+                    icon.classList.remove('hidden');
+                });
+                
+                // Panggil sekali saat halaman dimuat untuk memastikan kondisinya pas
+                document.addEventListener('DOMContentLoaded', toggleRevisi);
+            </script>
         @else
-            <!-- JIKA SUDAH SELESAI, KUNCI FORM -->
+            <!-- JIKA SUDAH SELESAI, KUNCI FORM (Bawaan sebelumnya) -->
             <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-6 flex items-start shadow-sm">
-                <svg class="w-6 h-6 text-emerald-600 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <div>
-                    <h3 class="font-bold text-emerald-900 mb-1">Telah Disahkan Pimpinan</h3>
-                    <p class="text-sm text-emerald-800">Dokumen ini telah disetujui dan ditandatangani secara elektronik. Status tidak dapat diubah lagi.</p>
-                </div>
+                <!-- ... isi pesan pengesahan ... -->
             </div>
         @endif
 
