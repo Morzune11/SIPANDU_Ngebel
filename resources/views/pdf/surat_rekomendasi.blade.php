@@ -4,11 +4,47 @@
     <meta charset="UTF-8">
     <title>Draf Surat Rekomendasi</title>
     <style>
+
+        /* 1. Atur Margin Kertas */
+        @page {
+            /* Atas, Kanan, Bawah, Kiri */
+            margin: 1.5cm 1.5cm 1.5cm 1.5cm; 
+            /* Jika masih terpotong, kecilkan lagi menjadi margin: 1cm; */
+        }
+
+       /* 2. Pengaturan Teks Keseluruhan */
         body {
             font-family: 'Times New Roman', Times, serif;
-            font-size: 12pt;
-            line-height: 1.15;
-            margin: 20px 40px;
+            font-size: 11pt; /* Turunkan dari 12pt ke 11pt atau 10.5pt */
+            line-height: 1.15; /* Rapatkan jarak antar baris */
+            color: #000;
+        }
+
+        /* 3. Kurangi Jarak Antar Paragraf & Judul */
+        p, h1, h2, h3, h4 {
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+        /* 4. Rapatkan Jarak List (Nomor/Titik) jika ada */
+        ul, ol {
+            margin-top: 2px;
+            margin-bottom: 2px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 2px;
+        }
+
+        /* 5. Pengaturan Tabel Biodata */
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Menghapus jarak ganda antar sel */
+        }
+        
+        table td, table th {
+            padding: 2px 4px; /* Atas-Bawah 2px, Kiri-Kanan 4px */
+            vertical-align: top; /* Pastikan teks berada di atas */
         }
         .kop-surat {
             text-align: center;

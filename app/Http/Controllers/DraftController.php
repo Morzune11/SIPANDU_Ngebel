@@ -14,6 +14,8 @@ class DraftController extends Controller
 /**
      * Memproses data dari formulir dan menampilkan Preview PDF
      */
+
+
 public function previewRekomendasi($id)
     {
         // 1. Ambil data pengajuan dan data profil pemohon dari database
@@ -96,22 +98,34 @@ public function previewRekomendasi($id)
         ];
     }
 
-    // Tampilkan di Browser (HTML)
+// Tampilkan Pratinjau PDF Langsung di Browser (Tab Baru)
     public function previewSelesai($id)
     {
+        // 1. Ambil data surat
         $data = $this->getSuratData($id);
-        return view('pdf.surat_rekomendasi', $data);
-    }
+        
+        // 2. Atur ukuran kertas menjadi F4 (Folio) agar seragam dengan yang didownload
+        $customPaper = array(0, 0, 609.4488, 935.433); 
+        
+        // 3. Render ke PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.surat_rekomendasi', $data)
+            ->setPaper($customPaper, 'portrait');
+            
+        // 4. Gunakan stream() BUKAN download()
+        // stream() akan membuka PDF di dalam browser (tidak otomatis terunduh)
+        return $pdf->stream('Preview_Surat_Izin.pdf');
+    }   
 
     // Download sebagai File PDF
     public function downloadSelesai($id)
     {
         $application = \App\Models\PermitApplication::findOrFail($id);
         $data = $this->getSuratData($id);
+        $customPaper = array(0, 0, 609.4488, 935.433); 
         
-        // Panggil plugin DomPDF
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.surat_rekomendasi', $data);
-        
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.surat_rekomendasi', $data)
+            ->setPaper($customPaper, 'portrait');
+            
         // Eksekusi download
         return $pdf->download('Surat_Izin_' . $application->user->nama_lengkap . '.pdf');
     }

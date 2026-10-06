@@ -43,8 +43,9 @@ Route::middleware(['auth', PreventBackHistory::class])->group(function () {
     })->name('notifikasi.read');
 
     // 2. Rute Surat Final (Bisa diakses Pemohon, Admin & Camat)
-    Route::get('/surat/final/preview/{id}', [\App\Http\Controllers\DraftController::class, 'previewSelesai'])->name('surat.final.preview');
-    Route::get('/surat/final/download/{id}', [\App\Http\Controllers\DraftController::class, 'downloadSelesai'])->name('surat.final.download');
+    // PERBAIKAN: Menggunakan match(['get', 'post']) agar kebal terhadap error MethodNotAllowed
+    Route::match(['get', 'post'], '/surat/final/preview/{id}', [\App\Http\Controllers\DraftController::class, 'previewSelesai'])->name('surat.final.preview');
+    Route::match(['get', 'post'], '/surat/final/download/{id}', [\App\Http\Controllers\DraftController::class, 'downloadSelesai'])->name('surat.final.download');
     
 });
 // ==========================================
@@ -65,7 +66,8 @@ Route::middleware(['auth', 'role:pemohon', PreventBackHistory::class])->group(fu
     // Fitur Pengajuan Izin
     Route::get('/pengajuan', [ApplicationController::class, 'index'])->name('pemohon.pengajuan.index');
     Route::get('/pengajuan/baru', [ApplicationController::class, 'create'])->name('pemohon.pengajuan.create');
-    Route::post('/pengajuan', [ApplicationController::class, 'store'])->name('pemohon.pengajuan.store');Route::get('/pengajuan/{pengajuan}', [ApplicationController::class, 'show'])->name('pemohon.pengajuan.show');
+    Route::post('/pengajuan', [ApplicationController::class, 'store'])->name('pemohon.pengajuan.store');
+    Route::get('/pengajuan/{pengajuan}', [ApplicationController::class, 'show'])->name('pemohon.pengajuan.show');
 
     // TAMBAHKAN DUA BARIS INI UNTUK REVISI
     Route::get('/pengajuan/{pengajuan}/edit', [ApplicationController::class, 'edit'])->name('pemohon.pengajuan.edit');
@@ -97,11 +99,13 @@ Route::prefix('petugas')->group(function () {
 
         // Rute Preview/Cetak Surat
         Route::get('/surat/rekomendasi/buat/{id}', [DraftController::class, 'createRekomendasi'])->name('surat.create-rekomendasi');
-        Route::post('/surat/rekomendasi/preview/{id}', [DraftController::class, 'previewRekomendasi'])->name('surat.preview-rekomendasi');
+        // GANTI Route::get menjadi Route::match(['get', 'post'])
+        Route::match(['get', 'post'], '/surat/rekomendasi/preview/{id}', [DraftController::class, 'previewRekomendasi'])->name('surat.preview-rekomendasi');
 
         // Rute Profil Petugas (Tambahkan di sini)
         Route::get('/profil', [ProfileController::class, 'edit'])->name('petugas.profil');
         Route::put('/profil', [ProfileController::class, 'update'])->name('petugas.profil.update');
+        
         // Rute Khusus Administrator (Hanya bisa diakses oleh Admin)
         Route::middleware(['role:admin'])->group(function () {
             // Kelola Akun Petugas
@@ -126,4 +130,5 @@ Route::prefix('petugas')->group(function () {
     });
 });
 
+// Penjadwalan Tugas (Bisa tetap di sini, walau idealnya di routes/console.php untuk Laravel 11+)
 Schedule::command('permits:expire')->daily();
