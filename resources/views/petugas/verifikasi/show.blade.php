@@ -144,11 +144,6 @@
                 // Panggil sekali saat halaman dimuat untuk memastikan kondisinya pas
                 document.addEventListener('DOMContentLoaded', toggleRevisi);
             </script>
-        @else
-            <!-- JIKA SUDAH SELESAI, KUNCI FORM (Bawaan sebelumnya) -->
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 mb-6 flex items-start shadow-sm">
-                <!-- ... isi pesan pengesahan ... -->
-            </div>
         @endif
 
         <!-- PANEL AKSI ADMIN -->
