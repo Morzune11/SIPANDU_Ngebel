@@ -80,14 +80,23 @@
 </head>
 <body>
 
-    <!-- Kop Surat -->
-    <div class="kop-surat">
-        <h1>PEMERINTAH KABUPATEN PONOROGO</h1>
-        <h2>KECAMATAN NGEBEL</h2>
-        <p>Jalan Telaga Nomor 02, Ngebel, Ponorogo, Jawa Timur 63493,</p>
-        <p>Telepon 0352-591045, Faksimile 0352-591045,</p>
-        <p>Laman ngebel.ponorogo.go.id, Pos-el ngebel@ponorogo.go.id</p>
-    </div>
+    <!-- Bagian Kop Surat PDF -->
+<div style="position: relative; text-align: center; border-bottom: 3px solid black; padding-bottom: 10px; margin-bottom: 25px;">
+    
+    <!-- Pengecekan: Logo HANYA MUNCUL jika status sudah di-ACC Camat -->
+    @if(isset($is_acc) && $is_acc == true)
+        <!-- Catatan: Untuk DomPDF, pemanggilan gambar lokal wajib menggunakan public_path() -->
+        <img src="{{ public_path('images/Ngebel Ponorogo.png') }}" style="position: absolute; left: 10px; top: 0; width: 80px; height: auto;">
+    @endif
+
+    <h3 style="margin: 0; font-size: 16px; text-transform: uppercase;">PEMERINTAH KABUPATEN PONOROGO</h3>
+    <h2 style="margin: 0; font-size: 20px; font-weight: bold; text-transform: uppercase;">KECAMATAN NGEBEL</h2>
+    <p style="margin: 5px 0 0 0; font-size: 12px;">Jl. Raya Ngebel No. 1, Kabupaten Ponorogo, Jawa Timur, 63493</p>
+    <p>Telepon 0352-591045, Faksimile 0352-591045,</p>
+    <p>Laman ngebel.ponorogo.go.id, Pos-el ngebel@ponorogo.go.id</p>
+</div>
+
+<!-- Di bawah sini adalah isi konten surat Anda... -->
 
     <!-- Judul & Nomor Surat -->
     <div class="judul-surat">

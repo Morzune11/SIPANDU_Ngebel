@@ -37,6 +37,20 @@
                 <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <p>Seluruh persyaratan administratif untuk pengajuan ini telah <b>diverifikasi dan dinyatakan lengkap</b> oleh staf admin kecamatan.</p>
             </div>
+            <!-- Kotak Hijau Sebelumnya -->
+            <div class="p-4 bg-emerald-50 border border-emerald-100 rounded-xl text-emerald-800 text-sm flex items-start">
+                <svg class="w-5 h-5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <p>Seluruh persyaratan administratif untuk pengajuan ini telah <b>diverifikasi dan dinyatakan lengkap</b> oleh staf admin kecamatan.</p>
+            </div>
+
+            <!-- TAMBAHKAN KODE INI: Tombol Pratinjau Draf -->
+            <div class="mt-6 border-t border-slate-200 pt-6">
+                <p class="text-sm text-slate-500 mb-3">Anda dapat meninjau isi draf surat sebelum memberikan pengesahan.</p>
+                <a href="{{ route('surat.preview-rekomendasi', $application->id) }}" target="_blank" class="inline-flex items-center px-5 py-2.5 bg-blue-50 text-blue-700 hover:bg-blue-600 hover:text-white rounded-lg text-sm font-bold transition">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                    Lihat Pratinjau Draf Surat
+                </a>
+            </div>
         </div>
     </div>
 
