@@ -4,7 +4,20 @@
 @section('page_title', 'Pemeriksaan Berkas')
 
 @section('content')
+<!-- Header Halaman Anda... -->
+    
+    <!-- TAMBAHKAN KODE INI UNTUK PESAN SUKSES -->
+    @if (session('status'))
+        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-center shadow-sm animate-pulse-short">
+            <svg class="w-6 h-6 mr-3 shrink-0 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="font-semibold">{{ session('status') }}</span>
+        </div>
+    @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Kolom Ringkasan Dokumen Anda... -->    
     
     <!-- Kolom Kiri: Detail Pengajuan & Dokumen -->
     <div class="lg:col-span-2 space-y-6">
@@ -60,8 +73,8 @@
                         <label class="block text-sm font-medium text-slate-700 mb-2">Pilih Keputusan / Status</label>
                         <!-- Tambahkan id="pilihStatus" dan event onchange -->
                         <select id="pilihStatus" name="status" onchange="toggleRevisi()" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 text-sm font-semibold transition bg-slate-50 cursor-pointer">
-                            <option value="diajukan" {{ $application->status === 'diajukan' ? 'selected' : '' }}>Diajukan (Menunggu)</option>
-                            <option value="diproses" {{ $application->status === 'diproses' ? 'selected' : '' }}>Sedang Direview / Diproses</option>
+                            <!-- <option value="diajukan" {{ $application->status === 'diajukan' ? 'selected' : '' }}>Diajukan (Menunggu)</option>
+                            <option value="diproses" {{ $application->status === 'diproses' ? 'selected' : '' }}>Sedang Direview / Diproses</option> -->
                             <option value="revisi" {{ $application->status === 'revisi' ? 'selected' : '' }}>Kembalikan ke Pemohon (Perlu Revisi Berkas)</option>
                             <option value="menunggu_tte" {{ $application->status === 'menunggu_tte' ? 'selected' : '' }}>Berkas Lengkap & Valid (Ajukan ke Camat)</option>
                         </select>
