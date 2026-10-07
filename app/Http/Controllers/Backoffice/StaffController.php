@@ -14,7 +14,8 @@ class StaffController extends Controller
     public function index(): View
     {
         // Mengambil semua user dengan role admin dan camat
-        $staffs = User::whereIn('role', ['admin', 'camat'])->latest()->get();
+        $staffs = User::whereIn('role', ['admin', 'camat','admin_polsek', 
+            'admin_koramil'])->latest()->get();
         return view('petugas.index', compact('staffs'));
     }
 
