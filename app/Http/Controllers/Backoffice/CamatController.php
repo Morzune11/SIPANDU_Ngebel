@@ -41,27 +41,32 @@ class CamatController extends Controller
     /**
      * Memproses persetujuan, mengubah status, dan menyimpan surat final.
      */
-   public function approve(Request $request, PermitApplication $application): RedirectResponse
+   public function approve(Request $request, PermitApplication $application)
     {
-        // 1. (Opsional) Disini nanti adalah tempat mengeksekusi script Generate PDF (DomPDF)
-        // yang secara otomatis menanamkan tulisan/QR Code "Telah Disetujui Camat"
-        
-        // 2. Simpan status bahwa surat sudah di-ACC (Stempel sementara)
-        $application->update([
-            'status' => 'selesai',
-            // File surat hasil dikosongkan sementara sampai generator PDF terpasang
-            // Atau Anda bisa menyimpan path teks 'disetujui' jika diperlukan
-        ]);
+        // 1. Simpan status selesai
+        $application->update(['status' => 'selesai']);
 
-        // 3. Notifikasi ke pemohon
+        // 2. Notifikasi ke pemohon
         $application->user->notify(new \App\Notifications\PermitNotification(
             'Surat Disetujui!',
             'Selamat! Surat pengajuan Anda telah disetujui (ACC) oleh Camat.',
             route('pemohon.pengajuan.show', $application->id)
         ));
 
+        // ==========================================
+        // 3. TAMBAHKAN: Tembusan Notifikasi ke Polsek & Koramil
+        // ==========================================
+        $instansiTerkait = \App\Models\User::whereIn('role', ['admin_polsek', 'admin_koramil'])->get();
+        if ($instansiTerkait->count() > 0) {
+            \Illuminate\Support\Facades\Notification::send($instansiTerkait, new \App\Notifications\PermitNotification(
+                'Tembusan Surat Baru',
+                'Terdapat surat izin baru a/n ' . $application->user->nama_lengkap . ' yang telah disahkan oleh Camat.',
+                route('instansi.tembusan.index')
+            ));
+        }
+
         return redirect()->route('camat.persetujuan.index')
-            ->with('status', 'Surat pengajuan ' . $application->user->nama_lengkap . ' berhasil di-ACC (stempel elektronik).');
+            ->with('status', 'Surat pengajuan berhasil di-ACC dan diteruskan ke instansi terkait.');
     }
 
     // Menampilkan riwayat dokumen yang sudah di-ACC Camat

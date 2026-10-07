@@ -91,7 +91,7 @@ Route::prefix('petugas')->group(function () {
     });
 
     // Area Dashboard Petugas (Gabungan Admin & Camat)
-    Route::middleware(['auth', 'role:admin,camat', PreventBackHistory::class])->group(function () {
+    Route::middleware(['auth', 'role:admin,camat,admin_polsek,admin_koramil', PreventBackHistory::class])->group(function () {
         // UBAH BARIS INI:
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('petugas.dashboard');
         
@@ -126,6 +126,13 @@ Route::prefix('petugas')->group(function () {
             Route::get('/persetujuan/riwayat', [CamatController::class, 'history'])->name('camat.riwayat.index');
             Route::get('/persetujuan/{application}', [CamatController::class, 'show'])->name('camat.persetujuan.show');
             Route::post('/persetujuan/{application}/approve', [CamatController::class, 'approve'])->name('camat.persetujuan.approve');
+        });
+
+        // ==========================================
+        // TAMBAHKAN BLOK INI: Rute Khusus Polsek & Koramil
+        // ==========================================
+        Route::middleware(['role:admin_polsek,admin_koramil'])->group(function () {
+            Route::get('/tembusan', [\App\Http\Controllers\Backoffice\TembusanController::class, 'index'])->name('instansi.tembusan.index');
         });
     });
 });
