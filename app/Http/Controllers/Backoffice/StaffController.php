@@ -56,7 +56,7 @@ class StaffController extends Controller
         'nama_lengkap' => ['required', 'string', 'max:255'],
         'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
         'no_telepon' => ['required', 'string', 'min:10', 'max:15', 'regex:/^[0-9]+$/'],
-        'role' => ['required', 'in:admin,camat'],
+        'role' => ['required', 'in:admin,camat,admin_polsek,admin_koramil'],
         'password' => ['required', 'confirmed', Password::defaults()],
     ], $messages);
 

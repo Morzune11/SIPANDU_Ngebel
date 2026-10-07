@@ -56,6 +56,12 @@
                     <option value="">-- Pilih Peran --</option>
                     <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin (Petugas Pelayanan)</option>
                     <option value="camat" {{ old('role') == 'camat' ? 'selected' : '' }}>Camat (Pengesahan TTE)</option>
+                    <option value="admin_polsek" {{ (old('role', $staff->role ?? '') == 'admin_polsek') ? 'selected' : '' }}>
+                        Admin Polsek (Tembusan Arsip)
+                    </option>
+                    <option value="admin_koramil" {{ (old('role', $staff->role ?? '') == 'admin_koramil') ? 'selected' : '' }}>
+                        Admin Koramil (Tembusan Arsip)
+                    </option>
                 </select>
             </div>
 

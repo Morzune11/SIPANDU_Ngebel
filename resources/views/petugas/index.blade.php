@@ -37,9 +37,17 @@
                         <p class="text-xs text-slate-500">{{ $staff->no_telepon }}</p>
                     </td>
                     <td class="p-4">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase
-                            {{ $staff->role === 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800' }}">
-                            {{ $staff->role }}
+                        @php
+                            $roleColor = match($staff->role) {
+                                'admin' => 'bg-blue-100 text-blue-800',
+                                'camat' => 'bg-purple-100 text-purple-800',
+                                'admin_polsek' => 'bg-amber-100 text-amber-900',
+                                'admin_koramil' => 'bg-emerald-100 text-emerald-900',
+                                default => 'bg-slate-100 text-slate-800'
+                            };
+                        @endphp
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider {{ $roleColor }}">
+                            {{ str_replace('_', ' ', $staff->role) }}
                         </span>
                     </td>
                     <td class="p-4 text-right">
