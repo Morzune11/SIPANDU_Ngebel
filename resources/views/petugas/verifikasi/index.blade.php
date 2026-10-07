@@ -39,19 +39,25 @@
                         <p class="font-medium text-slate-800">{{ $app->permitType->nama_izin }}</p>
                         <p class="text-xs text-slate-500">{{ $app->nomor_pendaftaran }}</p>
                     </td>
-                    <td class="p-4">
+                  <td class="p-4">
                         @php
                             $color = match($app->status) {
                                 'diajukan' => 'bg-blue-100 text-blue-800',
-                                'diproses', 'menunggu_tte' => 'bg-amber-100 text-amber-800',
+                                'diproses' => 'bg-amber-100 text-amber-800',
+                                'menunggu_tte' => 'bg-indigo-100 text-indigo-800', // Warna khusus (Indigo)
                                 'revisi' => 'bg-orange-100 text-orange-800',
                                 'selesai' => 'bg-emerald-100 text-emerald-800',
                                 'ditolak' => 'bg-red-100 text-red-800',
                                 default => 'bg-slate-100 text-slate-800'
                             };
+
+                            $text = match($app->status) {
+                                'menunggu_tte' => 'Diajukan ke Camat', // Custom teks di sini
+                                default => str_replace('_', ' ', $app->status)
+                            };
                         @endphp
                         <span class="px-2.5 py-1 rounded-full text-xs font-medium capitalize {{ $color }}">
-                            {{ str_replace('_', ' ', $app->status) }}
+                            {{ $text }}
                         </span>
                     </td>
                     <td class="p-4 text-right">

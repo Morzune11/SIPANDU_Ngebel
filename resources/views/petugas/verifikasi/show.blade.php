@@ -7,13 +7,37 @@
 <!-- Header Halaman Anda... -->
     
     <!-- TAMBAHKAN KODE INI UNTUK PESAN SUKSES -->
-    @if (session('status'))
-        <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-center shadow-sm animate-pulse-short">
-            <svg class="w-6 h-6 mr-3 shrink-0 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+@if (session('status'))
+        <div id="notifSukses" class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-start shadow-sm transition-all duration-500">
+            <!-- Ikon Centang -->
+            <svg class="w-6 h-6 mr-3 shrink-0 text-emerald-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span class="font-semibold">{{ session('status') }}</span>
+            
+            <!-- Teks Pesan -->
+            <span class="font-semibold flex-1">{{ session('status') }}</span>
+            
+            <!-- Tombol Tutup (X) -->
+            <button type="button" onclick="tutupNotif()" class="ml-3 shrink-0 text-emerald-500 hover:text-emerald-700 hover:bg-emerald-100 rounded-lg p-1 transition focus:outline-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
+
+        <!-- Script Menghilang Otomatis -->
+        <script>
+            function tutupNotif() {
+                const notif = document.getElementById('notifSukses');
+                if (notif) {
+                    notif.style.opacity = '0'; // Efek memudar
+                    setTimeout(() => notif.style.display = 'none', 500); // Hilangkan elemen setelah memudar
+                }
+            }
+
+            // Hilangkan otomatis setelah 5 detik (5000 milidetik)
+            setTimeout(tutupNotif, 5000);
+        </script>
     @endif
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 

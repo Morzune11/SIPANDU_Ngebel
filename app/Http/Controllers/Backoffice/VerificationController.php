@@ -64,6 +64,9 @@ class VerificationController extends Controller
             ));
         }
 
-        return back()->with('status', 'Status pengajuan berhasil diperbarui menjadi: ' . strtoupper($validated['status']));
+        // 5. Kembali ke halaman admin dengan pesan sukses (flash message hijau)
+        return back()->with('status', 'Status pengajuan berhasil diperbarui menjadi: ' . 
+            ($request->status === 'menunggu_tte' ? 'Diajukan ke Camat' : $request->status)
+        );
     }
 }

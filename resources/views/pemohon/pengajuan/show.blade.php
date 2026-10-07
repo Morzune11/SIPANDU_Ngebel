@@ -39,19 +39,25 @@
             </div>
             <div>
                 <p class="text-sm font-medium text-slate-500 mb-1">Status Saat Ini</p>
-                @php
-                    $color = match($pengajuan->status) {
-                        'diajukan' => 'bg-blue-100 text-blue-800',
-                        'diproses', 'menunggu_tte' => 'bg-amber-100 text-amber-800',
-                        'revisi' => 'bg-orange-100 text-orange-800',
-                        'selesai' => 'bg-emerald-100 text-emerald-800',
-                        'ditolak' => 'bg-red-100 text-red-800',
-                        default => 'bg-slate-100 text-slate-800'
-                    };
-                @endphp
-                <span class="inline-block px-3 py-1 mt-1 {{ $color }} rounded-full text-xs font-bold uppercase tracking-wider">
-                    {{ str_replace('_', ' ', $pengajuan->status) }}
-                </span>
+                    @php
+                        $color = match($pengajuan->status) {
+                            'diajukan' => 'bg-blue-100 text-blue-800',
+                            'diproses' => 'bg-amber-100 text-amber-800',
+                            'menunggu_tte' => 'bg-indigo-100 text-indigo-800', // Warna khusus (Indigo)
+                            'revisi' => 'bg-orange-100 text-orange-800',
+                            'selesai' => 'bg-emerald-100 text-emerald-800',
+                            'ditolak' => 'bg-red-100 text-red-800',
+                            default => 'bg-slate-100 text-slate-800'
+                        };
+
+                        $text = match($pengajuan->status) {
+                            'menunggu_tte' => 'Diajukan ke Camat', // Custom teks di sini
+                            default => str_replace('_', ' ', $pengajuan->status)
+                        };
+                    @endphp
+                    <span class="inline-block px-3 py-1 mt-1 {{ $color }} rounded-full text-xs font-bold uppercase tracking-wider">
+                        {{ $text }}
+                    </span>
             </div>
             <div>
                 <p class="text-sm font-medium text-slate-500 mb-1">Jenis Layanan</p>
