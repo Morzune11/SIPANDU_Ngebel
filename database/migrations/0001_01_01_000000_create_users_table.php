@@ -14,7 +14,7 @@ return new class extends Migration
         $table->id();
         // Tambahan 3 baris ini:
         $table->string('nik', 16)->unique();
-        $table->string('role')->default('pemohon');
+        $table->enum('role', ['pemohon', 'admin', 'camat', 'admin_polsek', 'admin_koramil'])->default('pemohon');
         $table->string('no_telepon')->nullable();
         
         $table->string('nama_lengkap'); // Ganti 'name' menjadi 'nama_lengkap'
