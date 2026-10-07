@@ -43,7 +43,15 @@ class ProfileController extends Controller
             'jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
             'pekerjaan' => ['nullable', 'string', 'max:255'],
             'alamat' => ['nullable', 'string'],
-            'password' => ['nullable', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            
+            // PERBAIKAN KEAMANAN PASSWORD:
+            'current_password' => ['nullable', 'required_with:password', 'current_password'],
+            'password' => ['nullable', 'confirmed', Password::defaults()],
+        ], [
+            // Pesan Error Kustom agar mudah dipahami pengguna
+            'current_password.required_with' => 'Password lama wajib diisi jika Anda ingin mengubah password.',
+            'current_password.current_password' => 'Password lama yang Anda masukkan salah!',
+            'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
         ]);
 
         $user->nik = $request->nik;
@@ -64,7 +72,7 @@ class ProfileController extends Controller
         }
 
         if ($request->filled('password')) {
-            $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
+            $user->password = Hash::make($request->password);
         }
 
         $user->save();

@@ -53,6 +53,9 @@
     <label for="current_password" class="block text-sm font-medium text-slate-700 mb-1">Password Lama</label>
     <div class="relative">
         <input type="password" id="current_password" name="current_password" class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 pr-10">
+        @error('current_password')
+            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+        @enderror
         
         <button type="button" onclick="togglePassword('current_password', 'eye-open-current', 'eye-closed-current')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-blue-600 focus:outline-none">
             <!-- Ikon Mata Tertutup (Default) -->
