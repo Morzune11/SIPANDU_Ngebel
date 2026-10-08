@@ -34,7 +34,7 @@ class StaffAuthController extends Controller
             $role = Auth::user()->role;
 
             // Pastikan yang login adalah admin atau camat
-            if (in_array($role, ['admin', 'camat'])) {
+            if (in_array($role, ['admin', 'camat', 'admin_polsek', 'admin_koramil'])) {
                 $request->session()->regenerate();
                 return redirect()->intended(route('petugas.dashboard'))
                     ->with('status', 'Berhasil masuk ke Portal Petugas.');

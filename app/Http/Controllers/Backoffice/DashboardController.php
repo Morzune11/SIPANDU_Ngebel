@@ -10,8 +10,21 @@ use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request): View
+    // PERHATIAN: Tulisan ": View" di akhir fungsi ini sudah dihapus
+    public function index(Request $request)
     {
+        $user = $request->user();
+
+        // ==========================================
+        // 1. CEGAT POLSEK & KORAMIL DI SINI (Paling Atas)
+        // ==========================================
+        if (in_array($user->role, ['admin_polsek', 'admin_koramil'])) {
+            return redirect()->route('instansi.tembusan.index');
+        }
+
+        // ==========================================
+        // 2. KODE ASLI ANDA UNTUK ADMIN & CAMAT
+        // ==========================================
         // Statistik global untuk gambaran umum
         $stats = [
             'total_pengajuan' => PermitApplication::count(),
