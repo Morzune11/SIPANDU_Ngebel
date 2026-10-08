@@ -43,6 +43,9 @@ public function previewRekomendasi($id)
             'nip_camat' => '19800101 200501 1 001',
         ];
 
+        // Panggil getSuratData agar semua data konsisten, termasuk nama Camat
+        $data = $this->getSuratData($id);
+
         // 3. Tampilkan halaman preview
         return view('pdf.surat_rekomendasi', $data);
     }
@@ -74,9 +77,19 @@ public function previewRekomendasi($id)
     private function getSuratData($id) {
         $application = \App\Models\PermitApplication::with(['user', 'permitType'])->findOrFail($id);
         
-        // Proteksi: Surat hanya bisa dilihat jika statusnya selesai
-        if($application->status !== 'selesai') abort(403, 'Surat belum diterbitkan.');
+        // 2. Ambil data Camat yang menjabat saat ini dari tabel users
+        $camat = \App\Models\User::where('role', 'camat')->first();
+        
+        // Jika akun camat ditemukan, ambil namanya. Jika belum ada, beri teks cadangan.
+        $namaCamat = $camat ? $camat->nama_lengkap : 'NAMA CAMAT BELUM DIATUR';
+        $nikCamat = $camat ? $camat->nik : '-';
 
+        // PERBAIKAN PROTEKSI: Hanya blokir pemohon jika surat belum selesai. Admin & Camat tetap bisa preview.
+        if (auth()->user()->role === 'pemohon' && $application->status !== 'selesai') {
+            abort(403, 'Surat belum diterbitkan.');
+        }
+
+        
         $pemohon = $application->user;
         return [
             'nomor_surat' => '400/' . $application->id . '/405.30/' . $application->updated_at->format('Y'),
@@ -92,8 +105,9 @@ public function previewRekomendasi($id)
             'tempat_kegiatan' => 'Kecamatan Ngebel',
             'waktu_kegiatan' => $application->created_at->format('d F Y'),
             'tanggal_dikeluarkan' => $application->updated_at->format('d F Y'),
-            'nama_camat' => 'Nama Camat Anda, M.Si', // Ganti dengan nama asli
-            'nip_camat' => '19800101 200501 1 001',
+            // PERBAIKAN: Gunakan variabel yang diambil dari database!
+            'nama_camat' => $namaCamat, 
+            'nip_camat' => $nikCamat,
             'is_acc' => true, // Penanda bahwa surat sudah memiliki stempel Camat
         ];
     }

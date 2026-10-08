@@ -223,7 +223,7 @@
         </ol>
     </div>
 
-    <!-- Tanda Tangan Pengesahan -->
+   <!-- Tanda Tangan Pengesahan -->
     <div class="ttd-box">
         <table style="width: 100%; margin-bottom: 15px;">
             <tr>
@@ -241,10 +241,16 @@
         <p style="font-weight: bold; text-align: center;">CAMAT NGEBEL</p>
         
         <!-- Ruang untuk Stempel & Tanda Tangan Basah/TTE -->
-        <p class="nama-camat" style="text-align: center;">{{ $nama_camat }}</p>
+        <br><br><br> <!-- Pastikan ada jarak yang cukup untuk stempel/TTE -->
+        
+        <!-- Gunakan strtoupper untuk otomatis huruf kapital dan cetak tebal bergaris bawah -->
+        <p class="nama-camat" style="text-align: center; font-weight: bold; text-decoration: underline;">
+            {{ strtoupper($nama_camat) }}
+        </p>
         <p style="text-align: center;">Pembina Tingkat I</p>
-        <p style="text-align: center;">NIP. {{ $nip_camat }}</p>
+        
+        <!-- Sesuaikan dengan nama variabel dari Controller (NIP atau NIK) -->
+        <p style="text-align: center;">NIP/NIK. {{ $nip_camat }}</p>
     </div>
-
 </body>
 </html>
