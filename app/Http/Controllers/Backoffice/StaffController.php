@@ -11,12 +11,25 @@ use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 class StaffController extends Controller
 {
-    public function index(): View
+  public function index(Request $request)
     {
-        // Mengambil semua user dengan role admin dan camat
-        $staffs = User::whereIn('role', ['admin', 'camat','admin_polsek', 
-            'admin_koramil'])->latest()->get();
-        return view('petugas.index', compact('staffs'));
+        $search = $request->input('search');
+
+        // Ambil data user yang bukan pemohon
+        $staffs = \App\Models\User::where('role', '!=', 'pemohon')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('nama_lengkap', 'like', "%{$search}%")
+                      ->orWhere('nik', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('role', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('petugas.index', compact('staffs', 'search'));
     }
 
     public function create(): View

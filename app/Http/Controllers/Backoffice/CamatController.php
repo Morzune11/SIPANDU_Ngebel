@@ -70,13 +70,28 @@ class CamatController extends Controller
     }
 
     // Menampilkan riwayat dokumen yang sudah di-ACC Camat
-    public function history()
+    public function history(Request $request)
     {
+        $search = $request->input('search');
+
         $applications = \App\Models\PermitApplication::with(['user', 'permitType'])
             ->where('status', 'selesai')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('nomor_pendaftaran', 'like', "%{$search}%")
+                      ->orWhereHas('user', function ($q2) use ($search) {
+                          $q2->where('nama_lengkap', 'like', "%{$search}%")
+                             ->orWhere('nik', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('permitType', function ($q3) use ($search) {
+                          $q3->where('nama_izin', 'like', "%{$search}%");
+                      });
+                });
+            })
             ->orderBy('updated_at', 'desc')
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
 
-        return view('camat.persetujuan.history', compact('applications'));
+        return view('camat.persetujuan.history', compact('applications', 'search'));
     }
 }

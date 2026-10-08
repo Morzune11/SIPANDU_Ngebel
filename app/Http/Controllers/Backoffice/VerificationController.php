@@ -14,13 +14,32 @@ use Illuminate\Support\Facades\Notification;
 class VerificationController extends Controller
 {
     /**
-     * Menampilkan daftar semua pengajuan izin.
+     * Menampilkan daftar semua pengajuan izin beserta fitur pencarian dan paginasi.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
-        // Mengambil semua pengajuan beserta data pemohon dan jenis izinnya
-        $applications = PermitApplication::with(['user', 'permitType'])->latest()->get();
-        return view('petugas.verifikasi.index', compact('applications'));
+        $search = $request->input('search');
+
+        // Mengambil data dengan relasi, filter pencarian, dan paginasi (10 data per halaman)
+        $applications = PermitApplication::with(['user', 'permitType'])
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('nomor_pendaftaran', 'like', "%{$search}%")
+                      ->orWhere('status', 'like', "%{$search}%")
+                      ->orWhereHas('user', function ($q2) use ($search) {
+                          $q2->where('nama_lengkap', 'like', "%{$search}%")
+                             ->orWhere('nik', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('permitType', function ($q3) use ($search) {
+                          $q3->where('nama_izin', 'like', "%{$search}%");
+                      });
+                });
+            })
+            ->latest()
+            ->paginate(5) // Mengubah get() menjadi paginate(5)
+            ->withQueryString(); // Mempertahankan query pencarian di URL saat pindah halaman
+
+        return view('petugas.verifikasi.index', compact('applications', 'search'));
     }
 
     /**

@@ -19,8 +19,11 @@ class ApplicationController extends Controller
     // Tambahkan parameter Request $request
     public function index(Request $request)
     {
-        // Perbaikan baris 17
-        $applications = PermitApplication::where('user_id', $request->user()->id)->latest()->get();
+        // Perbaikan N+1 Query: Tambahkan with(['permitType'])
+        $applications = PermitApplication::with(['permitType'])
+            ->where('user_id', $request->user()->id)
+            ->latest()
+            ->get();
         return view('pemohon.pengajuan.index', compact('applications'));
     }
 

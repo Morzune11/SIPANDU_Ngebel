@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 // use App\Models\Permohonan; // Asumsi menggunakan model Permohonan
 
 class DraftController extends Controller
@@ -85,7 +86,7 @@ public function previewRekomendasi($id)
         $nikCamat = $camat ? $camat->nik : '-';
 
         // PERBAIKAN PROTEKSI: Hanya blokir pemohon jika surat belum selesai. Admin & Camat tetap bisa preview.
-        if (auth()->user()->role === 'pemohon' && $application->status !== 'selesai') {
+        if (Auth::user()?->role === 'pemohon' && $application->status !== 'selesai') {
             abort(403, 'Surat belum diterbitkan.');
         }
 

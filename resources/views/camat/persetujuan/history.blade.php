@@ -4,9 +4,23 @@
 @section('page_title', 'Arsip Dokumen Terbit')
 
 @section('content')
-<div class="mb-6">
-    <h1 class="text-2xl font-bold text-slate-800">Riwayat Pengesahan Dokumen</h1>
-    <p class="text-slate-500 text-sm mt-1">Daftar seluruh dokumen perizinan yang telah Anda setujui dan terbitkan.</p>
+<div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+        <h1 class="text-2xl font-bold text-slate-800">Riwayat Pengesahan Dokumen</h1>
+        <p class="text-slate-500 text-sm mt-1">Daftar seluruh dokumen perizinan yang telah Anda setujui dan terbitkan.</p>
+    </div>
+    
+    <form method="GET" action="{{ route('camat.riwayat.index') }}" class="flex">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama, NIK, No. Registrasi..." class="px-4 py-2 border border-slate-300 rounded-l-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm w-full md:w-64">
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm rounded-r-lg hover:bg-blue-700 transition">
+            Cari
+        </button>
+        @if(request('search'))
+            <a href="{{ route('camat.riwayat.index') }}" class="ml-2 px-4 py-2 bg-slate-200 text-slate-700 text-sm rounded-lg hover:bg-slate-300 transition flex items-center">
+                Reset
+            </a>
+        @endif
+    </form>
 </div>
 
 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -53,5 +67,11 @@
             </tbody>
         </table>
     </div>
+    <!-- Pagination Links -->
+    @if ($applications->hasPages())
+    <div class="p-4 border-t border-slate-200 bg-slate-50">
+        {{ $applications->links() }}
+    </div>
+    @endif
 </div>
 @endsection
