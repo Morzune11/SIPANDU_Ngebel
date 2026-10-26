@@ -46,6 +46,9 @@ Route::middleware(['auth', PreventBackHistory::class])->group(function () {
     // PERBAIKAN: Menggunakan match(['get', 'post']) agar kebal terhadap error MethodNotAllowed
     Route::match(['get', 'post'], '/surat/final/preview/{id}', [\App\Http\Controllers\DraftController::class, 'previewSelesai'])->name('surat.final.preview');
     Route::match(['get', 'post'], '/surat/final/download/{id}', [\App\Http\Controllers\DraftController::class, 'downloadSelesai'])->name('surat.final.download');
+
+    // 3. Rute Buka Dokumen Persyaratan (Aman & Mendukung Hosting tanpa Symlink)
+    Route::get('/dokumen/lihat/{id}', [\App\Http\Controllers\DocumentController::class, 'show'])->name('dokumen.show');
     
 });
 // ==========================================
@@ -139,3 +142,40 @@ Route::prefix('petugas')->group(function () {
 
 // Penjadwalan Tugas (Bisa tetap di sini, walau idealnya di routes/console.php untuk Laravel 11+)
 Schedule::command('permits:expire')->daily();
+
+// ==========================================
+// FALLBACK STORAGE ROUTE (Solusi Hosting tanpa Symlink / InfinityFree)
+// ==========================================
+Route::get('/storage/{path}', function ($path) {
+    $cleanPath = ltrim($path, '/');
+    if (str_contains($cleanPath, '..')) {
+        abort(400);
+    }
+
+    $fullPath = storage_path('app/public/' . $cleanPath);
+
+    if (!file_exists($fullPath)) {
+        abort(404, 'File dokumen tidak ditemukan di penyimpanan server.');
+    }
+
+    $mimeType = mime_content_type($fullPath) ?: 'application/octet-stream';
+    $fileName = basename($cleanPath);
+
+    return response()->stream(function () use ($fullPath) {
+        $stream = fopen($fullPath, 'rb');
+        fpassthru($stream);
+        if (is_resource($stream)) {
+            fclose($stream);
+        }
+    }, 200, [
+        'Content-Type' => $mimeType,
+        'Content-Length' => filesize($fullPath),
+        'Content-Disposition' => 'inline; filename="' . $fileName . '"',
+    ]);
+})->where('path', '.*')
+  ->withoutMiddleware([
+      \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
+      \Illuminate\Session\Middleware\StartSession::class,
+      \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+  ])
+  ->name('storage.fallback');

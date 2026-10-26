@@ -80,7 +80,7 @@
             @foreach($pengajuan->documents as $doc)
                 <li class="flex items-center justify-between p-3.5 bg-slate-50 rounded-xl border border-slate-100 hover:border-slate-300 transition">
                     <span class="text-sm font-medium text-slate-700">{{ $doc->nama_dokumen }}</span>
-                    <a href="{{ Storage::url($doc->file_path) }}" target="_blank" class="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 px-3 py-1.5 rounded-lg transition">
+                    <a href="{{ route('dokumen.show', $doc->id) }}" target="_blank" class="flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-100 hover:bg-blue-200 px-3 py-1.5 rounded-lg transition">
                         Buka
                     </a>
                 </li>

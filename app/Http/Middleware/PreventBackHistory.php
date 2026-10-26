@@ -15,9 +15,18 @@ class PreventBackHistory
     {
         $response = $next($request);
 
-        // Memaksa browser agar tidak menyimpan cache halaman ini
-        return $response->header('Cache-Control', 'nocache, no-store, max-age=0, must-revalidate')
-                        ->header('Pragma', 'no-cache')
-                        ->header('Expires', 'Sun, 02 Jan 1990 00:00:00 GMT');
+        // Pastikan response mendukung method header() atau gunakan headers->set()
+        if (method_exists($response, 'header')) {
+            return $response->header('Cache-Control', 'nocache, no-store, max-age=0, must-revalidate')
+                            ->header('Pragma', 'no-cache')
+                            ->header('Expires', 'Sun, 02 Jan 1990 00:00:00 GMT');
+        }
+
+        // Untuk StreamedResponse atau BinaryFileResponse
+        $response->headers->set('Cache-Control', 'nocache, no-store, max-age=0, must-revalidate');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', 'Sun, 02 Jan 1990 00:00:00 GMT');
+
+        return $response;
     }
 }

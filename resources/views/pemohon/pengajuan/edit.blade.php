@@ -29,7 +29,7 @@
                     <label class="block text-sm font-bold text-slate-700 mb-1">{{ $doc->nama_dokumen }}</label>
                     <div class="flex items-center justify-between mb-2 p-2 bg-slate-50 rounded text-xs border border-slate-100">
                         <span class="text-slate-500 truncate">Berkas saat ini: {{ basename($doc->file_path) }}</span>
-                        <a href="{{ Storage::url($doc->file_path) }}" target="_blank" class="text-blue-600 font-bold hover:underline">Lihat</a>
+                        <a href="{{ route('dokumen.show', $doc->id) }}" target="_blank" class="text-blue-600 font-bold hover:underline">Lihat</a>
                     </div>
                     <!-- Array dokumen berdasarkan ID-nya -->
                     <input type="file" name="dokumen[{{ $doc->id }}]" accept=".pdf,.jpg,.jpeg,.png" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm bg-white focus:ring-blue-500">

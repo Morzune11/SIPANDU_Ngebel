@@ -19,6 +19,30 @@
 -- CREATE DATABASE IF NOT EXISTS `sipandu` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 -- USE `sipandu`;
 
+
+CREATE TABLE mahasiswa (
+    nim INT(15) NOT NULL,
+    nama_lengkap VARCHAR(100) NOT NULL,
+    kelas VARCHAR(4) NOT NULL,
+    id_jurusan VARCHAR(8) NOT NULL,
+    status_aktif ENUM('Aktif', 'Tidak Aktif') DEFAULT 'Aktif',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (nim)
+);
+
+CREATE TABLE nilai (
+    id_nilai INT(11) NOT NULL AUTO_INCREMENT,
+    nim INT(15) NOT NULL,
+    kode_mk VARCHAR(10) NOT NULL,
+    nilai_angka FLOAT NOT NULL,
+    nilai_huruf VARCHAR(2) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_nilai),
+    FOREIGN KEY (nim) REFERENCES mahasiswa(nim) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
+
 -- Dumping structure for table sipandu.applicant_auths
 CREATE TABLE IF NOT EXISTS `applicant_auths` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,

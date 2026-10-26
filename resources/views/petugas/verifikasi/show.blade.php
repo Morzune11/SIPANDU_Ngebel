@@ -73,7 +73,7 @@
                 @foreach($application->documents as $doc)
                     <li class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
                         <span class="text-sm font-medium text-slate-700">{{ $doc->nama_dokumen }}</span>
-                        <a href="{{ Storage::url($doc->file_path) }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-100 px-3 py-1.5 rounded">
+                        <a href="{{ route('dokumen.show', $doc->id) }}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-100 px-3 py-1.5 rounded">
                             Buka Dokumen
                         </a>
                     </li>
